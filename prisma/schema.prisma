@@ -1,0 +1,97 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                   String           @id @default(cuid())
+  pseudonymousId       String           @unique
+  name                 String
+  age                  Int
+  cycleTrackingEnabled Boolean          @default(false)
+  cycleLengthDays      Int?             @default(28)
+  periodLengthDays     Int?             @default(5)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  checkIns             DailyCheckIn[]
+  insights             Insight[]
+  chatMessages         ChatMessage[]
+  privacyConsent       PrivacyConsent?
+}
+
+model DailyCheckIn {
+  id           String       @id @default(cuid())
+  userId       String
+  date         String       // YYYY-MM-DD
+  mood         Int          // 1-5 scale
+  energy       Int          // 1-5 scale
+  sleepHours   Float        // e.g. 7.5
+  sleepQuality Int          // 1-5 scale
+  stressLevel  Int          // 1-5 scale
+  flowLevel    String?      // 'none' | 'spotting' | 'light' | 'medium' | 'heavy'
+  notes        String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symptoms     SymptomLog[]
+
+  @@unique([userId, date])
+}
+
+model SymptomLog {
+  id         String       @id @default(cuid())
+  checkInId  String
+  category   String       // 'physical', 'cognitive', 'digestive', 'mood'
+  name       String       // e.g. 'Brain Fog', 'Fatigue', 'Bloating', 'Joint Stiffness'
+  severity   Int          // 1 (mild), 2 (moderate), 3 (severe)
+
+  checkIn    DailyCheckIn @relation(fields: [checkInId], references: [id], onDelete: Cascade)
+}
+
+model Insight {
+  id               String   @id @default(cuid())
+  userId           String
+  title            String
+  description      String
+  factorA          String
+  factorB          String
+  correlationScore Float
+  confidence       String   // 'High', 'Moderate', 'Emerging'
+  category         String   // 'Sleep & Energy', 'Stress & Symptoms', 'Activity & Recovery'
+  recommendation   String
+  isDismissed      Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ChatMessage {
+  id             String   @id @default(cuid())
+  userId         String
+  role           String   // 'user' | 'assistant'
+  content        String
+  isRedFlag      Boolean  @default(false)
+  redFlagReason  String?
+  createdAt      DateTime @default(now())
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PrivacyConsent {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  aiProcessing        Boolean  @default(true)
+  dataSharingResearch Boolean  @default(false)
+  localProcessingOnly Boolean  @default(false)
+  dataRetentionDays   Int      @default(365)
+  updatedAt           DateTime @updatedAt
+
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
