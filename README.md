@@ -1,207 +1,246 @@
-# HerHealth — Universal Well-Being Companion (30% MVP)
+# HerHealth — Universal Well-Being Companion
 
-An AI-powered personal well-being companion for women's everyday health — cycle awareness (optional), mood, energy, fitness, nutrition, sleep, and body understanding — designed to work for **any woman, at any age, of any background, not tied to a specific reproductive life stage**.
+HerHealth is an AI-powered personal well-being companion designed to help women understand their everyday health through daily check-ins, personalized insights, conversational assistance, and health tracking.
 
-Deliberately excludes high-stakes, narrow-audience modules (pregnancy, postpartum, TTC fertility optimization, and menopause-specific programs) in favor of **universal relevance, lower clinical risk, and architectural privacy**.
+The project focuses on universal well-being rather than making menstrual cycle tracking a requirement. Cycle tracking is optional, allowing the application to support users across different ages and life stages.
 
----
+## Table of Contents
 
-## 1. Project Overview & Core Loop
+- [Project Overview](#project-overview)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Installation and Setup](#installation-and-setup)
+- [Running Tests](#running-tests)
+- [Running the Application](#running-the-application)
+- [Demonstration Guide](#demonstration-guide)
+- [Development Roadmap](#development-roadmap)
+- [Team Contributions](#team-contributions)
 
-The core product loop is:
-$$\text{Log (10s)} \longrightarrow \text{Understand (AI Engine)} \longrightarrow \text{Act (Plain-Language Advice)} \longrightarrow \text{Reflect (Timeline)}$$
+## Project Overview
 
-Unlike legacy women's health apps that treat the menstrual cycle calendar as the prerequisite backbone, **HerHealth places the AI Insight Engine and AI Companion at the true center of the application**. Menstrual cycle tracking is an optional input signal that can be enabled or disabled without limiting the app's utility for non-menstruating women (e.g., teens, women on oral contraceptives, post-menopausal women, or those with hysterectomy or amenorrhea).
+HerHealth follows a simple health-tracking workflow:
 
----
+**Log → Understand → Act → Reflect**
 
-## 2. Implemented Features (30% MVP Review Ready)
+Users record daily health information, review patterns and insights, receive plain-language explanations, and track changes over time.
 
-| Feature | Implementation Status | Functional Details |
-| :--- | :--- | :--- |
-| **Quick Daily Check-In** | ✅ Fully Functional | 10-second check-in: Mood (1-5), Energy (1-5), Sleep Hours & Quality (1-5), Stress Level (1-5), Multi-select Symptoms, and Free-text notes. Cycle flow is an optional toggle. |
-| **AI Insight Engine** | ✅ Fully Functional | Hero feature. Calculates multi-variable Pearson correlations (Sleep vs. Energy, Stress vs. Brain Fog/Bloating/Headache) and outputs non-prescriptive, body-neutral insight cards. |
-| **Conversational AI Companion** | ✅ Fully Functional | Real-time chat grounded in user logs and curated clinical knowledge. Explains physiological mechanisms, translates medical terms, and maintains empathetic tone. |
-| **Explain-My-Body Mode** | ✅ Fully Functional | Instant plain-language breakdown of common symptoms (fatigue, brain fog, tension headaches, bloating, sleep latency). |
-| **Clinical Red-Flag Escalation** | ✅ Fully Functional | Automated detection of emergency symptoms (cardiac signs, neurological deficits, severe hemorrhage, psychiatric crisis). Bypasses app guidance to provide immediate 911 / 988 emergency routing. |
-| **Doctor-Visit Prep Generator** | ✅ Fully Functional | One-click clinical summary generator: synthesizes 30-day vitals averages, symptom frequency matrix, AI correlations, and patient concerns into a print-ready (`window.print()`) medical brief. |
-| **Health Timeline & Filter** | ✅ Fully Functional | Chronological longitudinal history view with filters for High Stress, Low Sleep, and Symptom occurrences. |
-| **Privacy & Security Center** | ✅ Fully Functional | Separation of identity from health records using pseudonymous IDs (`HH-USER-...`), default-off research consent, 1-click portable JSON export, and single-click **True Delete** permanent purge. |
-| **Universal Demographic Cohorts** | ✅ Fully Functional | In-header profile switcher enabling 1-click live demo switching between **Maya (21, Student)**, **Elena (37, Working Professional with Cycle Active)**, and **Sarah (58, Post-Menopause)**. |
+The application is designed to make health information easier to understand while supporting privacy, user choice, and appropriate escalation of potentially urgent symptoms.
 
----
+## Features
 
-## 3. Major Features Planned for Remaining 70%
+### 1. Daily Health Check-In
+- Mood tracking on a 1–5 scale.
+- Energy tracking on a 1–5 scale.
+- Sleep duration and sleep quality.
+- Stress-level tracking.
+- Symptom selection and optional notes.
+- Optional menstrual flow tracking.
 
-- **Phase 2 (50% Milestone)**:
-  - Preventive Care Concierge (age-tailored screening reminders for mammograms, Pap smears, bone density, lipid panels).
-  - Mental & Emotional Well-Being guided reflection modules.
-  - Multi-turn voice interaction for check-ins.
-- **Phase 3 (75% Milestone)**:
-  - Mobile Application via React Native + Expo sharing the existing TypeScript business logic and design tokens.
-  - Optional Wearable Integrations (Apple Health, Google Fit, Oura, Whoop).
-  - Condition-specific opt-in hubs (PCOS, thyroid, autoimmune, endometriosis).
-- **Phase 4 (100% Final Release)**:
-  - Pelvic Floor, Sexual Wellness, and Skin & Body Confidence optional modules.
-  - HIPAA BAA compliant cloud backend with end-to-end zero-knowledge encryption.
-  - Moderated peer-support community layer.
+### 2. AI Insight Engine
+- Examines relationships between recorded health indicators.
+- Calculates statistical correlations between selected variables.
+- Presents insight cards to help users explore possible patterns.
+- Provides non-prescriptive recommendations.
 
----
+### 3. Conversational AI Companion
+- Provides plain-language explanations of common health topics.
+- Answers questions about symptoms and everyday well-being.
+- Supports an empathetic, accessible conversational experience.
+- Supports configured AI providers with an offline fallback.
 
-## 4. Technology Stack (Actually Implemented)
+### 4. Explain-My-Body
+Provides accessible explanations of common experiences such as fatigue, brain fog, headaches, bloating, and sleep difficulties.
 
-- **Frontend**: Next.js 14.2 (App Router), React 18, TypeScript, Tailwind CSS, Lucide React icons.
-- **Backend API**: Next.js API route handlers (`/api/check-in`, `/api/insights`, `/api/companion`, `/api/doctor-prep`, `/api/privacy`, `/api/users`).
-- **Database & ORM**: Prisma ORM with SQLite (`prisma/dev.db`), completely zero-configuration and local, with PostgreSQL-compatible schema.
-- **AI Orchestration & Safety**: Multi-variable statistical correlation engine (`insightEngine.ts`) + clinical safety and emergency escalation parser (`redFlags.ts`) + grounded conversational knowledge base (`aiCompanion.ts`). Supports Anthropic Claude or Google Gemini API keys via environment variables, with offline fallback simulation.
-- **Testing**: Automated TypeScript test runner (`tsx src/lib/test-runner.ts`).
+### 5. Health Safety Escalation
+Detects selected potential red-flag symptoms and displays safety guidance rather than relying solely on routine app recommendations.
 
----
+### 6. Doctor-Visit Preparation
+Generates a health summary that can help users prepare for a medical appointment, including recorded trends, symptom information, and questions to discuss.
 
-## 5. Project Directory Structure
+### 7. Health Timeline
+Displays longitudinal health records and supports filtering to help users review changes over time.
 
-```
+### 8. Privacy and Security
+- Pseudonymous user identifiers.
+- Configurable privacy and research-consent settings.
+- Health-data export functionality.
+- Data deletion functionality.
+
+### 9. Demonstration Profiles
+Includes sample demographic profiles for demonstrating how the interface behaves for users at different ages and life stages.
+
+## Technology Stack
+
+| Component | Technology |
+|---|---|
+| Frontend | Next.js 14, React 18, TypeScript |
+| Styling | Tailwind CSS |
+| Icons | Lucide React |
+| Backend | Next.js API route handlers |
+| ORM | Prisma ORM |
+| Database in the current version | SQLite |
+| Statistical analysis | TypeScript-based correlation logic |
+| AI assistance | Configurable Anthropic Claude or Google Gemini integration |
+| Testing | TypeScript test runner using `tsx` |
+
+**Database note:** The current repository is configured for SQLite. A PostgreSQL/Supabase migration should be documented as implemented only after the migration has been completed and verified.
+
+## Project Structure
+
+```text
 HerHealth/
 ├── prisma/
-│   ├── dev.db                 # Local zero-config SQLite database
-│   ├── schema.prisma          # Database schema (User, DailyCheckIn, SymptomLog, etc.)
-│   └── seed.ts                # Multi-demographic seed data (Maya 21, Elena 37, Sarah 58)
+│   ├── dev.db
+│   ├── schema.prisma
+│   └── seed.ts
 ├── src/
 │   ├── app/
 │   │   ├── api/
-│   │   │   ├── check-in/route.ts      # Log submission and query API
-│   │   │   ├── companion/route.ts     # Conversational AI API
-│   │   │   ├── doctor-prep/route.ts   # Clinical summary generation API
-│   │   │   ├── insights/route.ts      # Statistical correlation API
-│   │   │   ├── privacy/route.ts       # Consent, JSON export, and True Delete API
-│   │   │   └── users/route.ts         # User profiles API
-│   │   ├── companion/page.tsx         # AI Companion & Explain-My-Body interface
-│   │   ├── doctor-prep/page.tsx       # Doctor-Visit Prep Generator (Print-ready)
-│   │   ├── globals.css                # Styling, scrollbars, and @media print rules
-│   │   ├── layout.tsx                 # App layout with responsive navigation
-│   │   ├── page.tsx                   # Main Dashboard (Vitals, Insights, Trends)
-│   │   ├── privacy/page.tsx           # Privacy & Security Control Center
-│   │   └── timeline/page.tsx          # Health Timeline & Longitudinal log history
+│   │   │   ├── check-in/
+│   │   │   ├── companion/
+│   │   │   ├── doctor-prep/
+│   │   │   ├── insights/
+│   │   │   ├── privacy/
+│   │   │   └── users/
+│   │   ├── companion/
+│   │   ├── doctor-prep/
+│   │   ├── privacy/
+│   │   ├── timeline/
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
 │   ├── components/
-│   │   ├── CheckInModal.tsx           # 10-second check-in modal
-│   │   ├── ChatInterface.tsx          # AI Companion chat component
-│   │   ├── InsightCard.tsx            # AI insight card with correlation badge
-│   │   ├── Navbar.tsx                 # Navigation bar with responsive menu
-│   │   ├── ProfileSwitcher.tsx        # 1-click universal demographic cohort switcher
-│   │   ├── RedFlagAlert.tsx           # Clinical emergency escalation banner
-│   │   └── TrendChart.tsx             # Interactive SVG longitudinal correlation chart
 │   └── lib/
-│       ├── aiCompanion.ts             # AI Companion logic & clinical knowledge base
-│       ├── doctorPrep.ts              # Physician report aggregation engine
-│       ├── insightEngine.ts           # Multi-factor correlation algorithm
-│       ├── prisma.ts                  # Prisma client singleton
-│       ├── redFlags.ts                # Emergency symptom detection & hotlines
-│       ├── test-runner.ts             # Automated test suite
-│       └── types.ts                   # Shared TypeScript data contracts
+│       ├── aiCompanion.ts
+│       ├── doctorPrep.ts
+│       ├── insightEngine.ts
+│       ├── prisma.ts
+│       ├── redFlags.ts
+│       ├── test-runner.ts
+│       └── types.ts
+├── .env.example
 ├── package.json
 ├── tailwind.config.ts
 ├── tsconfig.json
 └── README.md
 ```
 
----
+## Prerequisites
 
-## 6. Setup & Execution Instructions
+- Node.js 18 or later.
+- npm.
+- Git.
 
-### Prerequisites
-- Node.js (v18+ or v20+ recommended)
-- npm
+## Installation and Setup
 
-### Step 1: Install Dependencies
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/nairSahasra/HerHealth.git
+cd HerHealth
+```
+
+### 2. Install dependencies
+
 ```bash
 npm install
 ```
 
-### Step 2: Initialize Database & Seed Demo Data
-```bash
-# Push schema and create SQLite database
-npm run db:push
+### 3. Configure environment variables
 
-# Seed the database with Maya (21), Elena (37), and Sarah (58) realistic 14-day logs
+Create a local environment file from the provided template.
+
+**PowerShell:**
+
+```powershell
+Copy-Item .env.example .env
+```
+
+The template configures a local SQLite database and includes optional AI-provider environment variables.
+
+Add valid API keys only if you intend to use the corresponding external AI service. Do not commit `.env` or expose API keys in public repositories.
+
+### 4. Initialize the database
+
+```bash
+npm run db:push
+```
+
+### 5. Load demonstration data
+
+```bash
 npm run db:seed
 ```
 
-### Step 3: Run Automated Verification Tests
-```bash
-npm test
-```
-*Executes all 12 automated unit and integration tests for red-flag escalation, Pearson correlation math, and doctor prep generation.*
+### 6. Start the development server
 
-### Step 4: Start the Development Server
 ```bash
 npm run dev
 ```
 
-### Step 5: Access the Application
-Open your browser and navigate to:
-```
-http://localhost:3000
-```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
----
+## Running Tests
 
-## 7. Demonstration Guide for Project Review
+Execute the project's automated tests using:
 
-1. **Universal Relevance Demo (Profile Switcher)**:
-   - In the top navigation bar, click the cohort switcher (currently showing **Maya, Age 21**).
-   - Switch to **Sarah (Age 58)**: Note that the cycle calendar is completely disabled, and her dashboard highlights joint stiffness, sleep quality, and energy recovery.
-   - Switch to **Elena (Age 37)**: Note how cycle tracking gracefully appears as an optional signal, showing luteal transition correlations alongside her work stamina.
-2. **10-Second Daily Check-In**:
-   - Click the **"Daily Check-In"** button in the header or dashboard.
-   - Select Mood (4), Energy (3), Sleep (8 hrs), Stress (2), select symptoms (*Fatigue*, *Brain Fog*), add an optional reflection note, and click **Save Daily Check-In**.
-   - Watch the dashboard immediately refresh with the newly logged data.
-3. **AI Insight Engine (Hero Feature)**:
-   - Review the AI Insight cards on the dashboard. Observe statistical correlation badges (e.g., $r = +0.78$) detailing how sleep hours correlate with daytime energy.
-4. **Conversational AI Companion & Explain-My-Body**:
-   - Navigate to `/companion`. Click prompt suggestion chips like *"Why do I feel so exhausted in the afternoons?"* or *"What causes brain fog?"*.
-   - Review the plain-language, evidence-based physiological translation.
-5. **Clinical Red-Flag Safety Escalation**:
-   - In the AI Companion chat, type an acute emergency symptom: *"I have crushing chest pain and left arm numbness"*.
-   - Observe the immediate red-flag safety alert banner with emergency hotline routing (911 / 988), proving the app will never dangerously diagnose or dismiss emergency symptoms.
-6. **Doctor-Visit Prep Generator**:
-   - Navigate to `/doctor-prep`. Review the auto-generated 30-day baseline vitals, symptom matrix, and high-yield questions for the doctor.
-   - Click **"Print / Save as PDF"** to preview the clean one-page clinical brief.
-7. **Privacy Control Center**:
-   - Navigate to `/privacy`. Toggle granular consent settings, test the **One-Click JSON Data Export**, or demonstrate the **True Delete** permanent purge.
-
----
-
-## 8. Division of Work Among 3 Team Members
-
-```mermaid
-flowchart TD
-    subgraph TM1["Team Member 1 — Frontend / UI"]
-        A1["Next.js App Shell & Responsive Layout"]
-        A2["Quick Check-In Modal & Form Validation"]
-        A3["Interactive SVG Trend Chart"]
-        A4["Doctor-Visit Prep Printable View"]
-    end
-
-    subgraph TM2["Team Member 2 — Backend API & AI Engine"]
-        B1["Next.js REST API Route Handlers"]
-        B2["Pearson Correlation Insight Engine"]
-        B3["Conversational AI Orchestration"]
-        B4["Clinical Red-Flag Escalation Engine"]
-    end
-
-    subgraph TM3["Team Member 3 — Database, Testing & Docs"]
-        C1["Prisma Schema & SQLite Persistence"]
-        C2["Multi-Demographic Seed Data Generation"]
-        C3["Privacy Architecture, JSON Export & True Delete"]
-        C4["Automated Test Suite & Project Documentation"]
-    end
+```bash
+npm test
 ```
 
----
+The test runner is configured in `src/lib/test-runner.ts`. Review the test output to confirm which checks pass in your local environment.
 
-## 9. Future Development Roadmap
+## Demonstration Guide
 
-- **30% (Current MVP)**: Core platform, daily check-in, AI Insight Engine, AI Companion with red-flag safety, Doctor-Visit Prep, Timeline, Privacy Center, 3 demographic cohorts.
-- **50% Milestone**: Preventive Care Concierge, guided reflection journal with NLP sentiment extraction, nutrition & movement recommendations.
-- **75% Milestone**: Mobile companion app (React Native/Expo) sharing core TypeScript logic; wearable device syncing (Apple Health, Oura, Google Fit); opt-in chronic condition hubs (PCOS, thyroid).
-- **100% Milestone**: Pelvic floor and sexual wellness modules; HIPAA BAA cloud certification; peer-moderated community forums with credentialed women's health clinicians.
+For a project review, consider demonstrating the following workflows:
+
+1. **Dashboard:** Show the health dashboard and available health indicators.
+2. **Daily Check-In:** Record mood, energy, sleep, stress, and symptoms.
+3. **AI Insights:** Review patterns calculated from recorded health data.
+4. **AI Companion:** Ask a question about a common symptom.
+5. **Safety Escalation:** Demonstrate how the application responds to a configured red-flag symptom.
+6. **Doctor-Visit Preparation:** Generate and preview a health summary.
+7. **Health Timeline:** Review previous check-ins and filter the recorded information.
+8. **Privacy Center:** Demonstrate the available consent, export, and deletion controls.
+
+Use demonstration data for reviews and avoid exposing real users' sensitive health information.
+
+## Development Roadmap
+
+The following items describe planned development, not necessarily completed functionality.
+
+### Phase 2
+- Preventive-care reminders.
+- Guided mental and emotional well-being activities.
+- Voice-assisted check-ins.
+
+### Phase 3
+- React Native and Expo mobile application.
+- Optional wearable integrations.
+- Opt-in condition-specific health modules.
+- Database and backend architecture improvements.
+
+### Phase 4
+- Additional optional well-being modules.
+- Stronger cloud security and privacy architecture.
+- Moderated peer-support capabilities.
+
+Progress on these milestones should be updated as features are implemented and tested.
+
+## Team Contributions
+
+The project work can be organized into three areas:
+
+- **Frontend and UI:** Application layout, daily check-in interface, charts, responsive styling, and doctor-visit views.
+- **Backend and AI:** API routes, statistical insight generation, conversational assistance, and safety escalation.
+- **Database, Testing, and Documentation:** Prisma schema, database persistence, demonstration data, privacy functionality, automated tests, and project documentation.
+
+## Disclaimer
+
+HerHealth is intended to support personal health awareness and preparation for healthcare conversations. It is not a substitute for professional medical advice, diagnosis, or emergency care.
+
+## Repository
+
+GitHub: https://github.com/nairSahasra/HerHealth
